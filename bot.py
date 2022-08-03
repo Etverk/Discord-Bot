@@ -107,6 +107,12 @@ def get_help():
     )
     
     embed.add_field(
+        name = "&inspiration",
+        value = "Ger dig lite inspiration!",
+        inline = True
+    )
+    
+    embed.add_field(
         name = "&callstaff \{anledning\}",
         value = "Skickar en rapport och pingar staff.",
         inline = True
@@ -140,7 +146,7 @@ async def on_message(message):
     #Looks for "&hjälp" command and runs corresponding function
     if message.content == ("&hjälp"):
         await message.channel.send(content=None, embed=get_help())
-        print(serverdata.MP["name"])
+        print(serverdata.Mp["name"])
     
 #Imports discord token from "token.0"
 with open("token.0", "r", encoding="utf-8") as f:
