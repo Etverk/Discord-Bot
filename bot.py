@@ -1,10 +1,12 @@
 #Imports
 from os import startfile
+from discord.ext import commands
 import discord
 import asyncio
 import requests
 import json
 import re
+import serverdata
 
 #Message intents
 intents = discord.Intents.default()
@@ -32,23 +34,12 @@ def get_hjälpare_embed():
         inline = False
     )
     
-    embed.add_field(
-        name = "MP#9366",
-        value = "• Juridik \n • Samhällsvetenskap",
-        inline = True
-    )
-    
-    embed.add_field(
-        name = "Rezvan#0477",
-        value = "• Datateknik \n • Matematik",
-        inline = True
-    )
-    
-    embed.add_field(
-        name = "Hummla#4951",
-        value = "• Naturvetenskap \n • Matematik",
-        inline = True
-    )
+    for i in serverdata.professorList:
+        embed.add_field(
+            name = i["name"],
+            value = "• " + i["skill1"] + "\n • " + i["skill2"],
+            inline = True
+        )
     
     embed.add_field(
         name = "\u200b",
@@ -57,40 +48,17 @@ def get_hjälpare_embed():
     )
     
     embed.add_field(
-        name = "\nLÄRARE",
+        name = "LÄRARE",
         value = "Denna roll ges till medlemmar som är extra duktiga på att ge hjälp åt andra på servern.",
         inline = False
     )
     
-    embed.add_field(
-        name = "MästerVargen#0612",
-        value = "• Psykologi \n • Null",
-        inline = True
-    )
-    
-    embed.add_field(
-        name = "Aaron.#1596",
-        value = "• Null \n • Null",
-        inline = True
-    )
-    
-    embed.add_field(
-        name = "Tom&Jerry#6162",
-        value = "• Null \n • Null",
-        inline = True
-    )
-    
-    embed.add_field(
-        name = "eggis#8381",
-        value = "• Matematik \n • Kemi",
-        inline = True
-    )
-    
-    embed.add_field(
-        name = "maia#4232",
-        value = "• Idrott & hälsa \n • Svenska",
-        inline = True
-    )
+    for i in serverdata.lärareLista:
+        embed.add_field(
+            name = i["name"],
+            value = "• " + i["skill1"] + "\n • " + i["skill2"],
+            inline = True
+        )
     
     embed.add_field(
         name = "\u200b",
@@ -143,7 +111,6 @@ def get_help():
         value = "Skickar en rapport och pingar staff.",
         inline = True
     )
-    
     return embed
 
 #Client events
@@ -169,17 +136,16 @@ async def on_message(message):
         channel = client.get_channel(1004381595836358676)
         await channel.send(content=None, embed=report_function(message))
         await channel.send("<@&1004383226862772274>")
-        
+ 
     #Looks for "&hjälp" command and runs corresponding function
-    if message.content.startswith("&hjälp"):
+    if message.content == ("&hjälp"):
         await message.channel.send(content=None, embed=get_help())
-        print("hjälp")
+        print(serverdata.MP["name"])
     
-
 #Imports discord token from "token.0"
-with open("vault.0", "r", encoding="utf-8") as f:
+with open("token.0", "r", encoding="utf-8") as f:
     lines = f.readlines()
     botToken = lines[0]
 
-#Runs bot
+#Runs bot 
 client.run(botToken)
