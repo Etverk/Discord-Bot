@@ -1,8 +1,10 @@
 #Imports
+from os import startfile
 import discord
 import asyncio
 import requests
 import json
+import re
 
 #Message intents
 intents = discord.Intents.default()
@@ -15,6 +17,134 @@ def get_inspiration():
     apiResponse = requests.get("https://zenquotes.io/api/quotes/")
     jsonData = json.loads(apiResponse.text)
     return jsonData[0]["q"] + "  - **" + jsonData[0]["a"] + "**"
+
+#Returns embed containing the server's helpers.
+def get_hjälpare_embed():
+    embed = discord.Embed(
+        title = "Våra hjälpare",
+        description = "\u200b",
+        color = 0xFFFFFF
+    )
+    
+    embed.add_field(
+        name = "PROFESSORER",
+        value = "Denna roll ges till medlemmar som ger högt kvalitativa och ingående svar som hjälp.",
+        inline = False
+    )
+    
+    embed.add_field(
+        name = "MP#9366",
+        value = "• Juridik \n • Samhällsvetenskap",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "Rezvan#0477",
+        value = "• Datateknik \n • Matematik",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "Hummla#4951",
+        value = "• Naturvetenskap \n • Matematik",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "\u200b",
+        value = "\u200b",
+        inline = False
+    )
+    
+    embed.add_field(
+        name = "\nLÄRARE",
+        value = "Denna roll ges till medlemmar som är extra duktiga på att ge hjälp åt andra på servern.",
+        inline = False
+    )
+    
+    embed.add_field(
+        name = "MästerVargen#0612",
+        value = "• Psykologi \n • Null",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "Aaron.#1596",
+        value = "• Null \n • Null",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "Tom&Jerry#6162",
+        value = "• Null \n • Null",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "eggis#8381",
+        value = "• Matematik \n • Kemi",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "maia#4232",
+        value = "• Idrott & hälsa \n • Svenska",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "\u200b",
+        value = "\u200b",
+        inline = True
+    )
+    
+    return embed
+
+#Returns embed containing report.
+def report_function(message):
+    reportReason = message.content.split(" ", 1)
+    
+    embed = discord.Embed(
+        title = "STAFF FÖRFRÅGAN",
+        description = f"Det har skett en förfrågan om staff i #{message.channel} " + "\.",
+        color = 0xFFFFFF
+    )
+    
+    embed.add_field(
+        name = message.author,
+        value = "Anledning: " + str(reportReason[1]),
+        inline = False
+    )
+    
+    return embed
+
+#Returns embed containing help.
+def get_help():
+    embed = discord.Embed(
+        title = "Hjälp",
+        description = f"Följande kommandos kan du använda med denna botten.",
+        color = 0xFFFFFF
+    )
+    
+    embed.add_field(
+        name = "&hjälp",
+        value = "Visar alla kommandos denna bot stöder.",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "&hjälpare",
+        value = "Visar alla hjälpare och deras inriktningar.",
+        inline = True
+    )
+    
+    embed.add_field(
+        name = "&callstaff \{anledning\}",
+        value = "Skickar en rapport och pingar staff.",
+        inline = True
+    )
+    
+    return embed
 
 #Client events
 #Login confirmation message
@@ -30,6 +160,20 @@ async def on_message(message):
     if message.content.startswith("&inspiration"):
         inspiration = get_inspiration()
         await message.channel.send(inspiration)
+        
+    if message.content.startswith("&hjälpare"):
+        await message.channel.send(content=None, embed=get_hjälpare_embed())
+        
+    #&callstaff {reason}
+    if message.content.startswith("&callstaff"):
+        channel = client.get_channel(1004381595836358676)
+        await channel.send(content=None, embed=report_function(message))
+        await channel.send("<@&1004383226862772274>")
+        
+    #Looks for "&hjälp" command and runs corresponding function
+    if message.content.startswith("&hjälp"):
+        await message.channel.send(content=None, embed=get_help())
+        print("hjälp")
     
 
 #Imports discord token from "token.0"
