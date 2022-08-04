@@ -131,7 +131,7 @@ async def on_ready():
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         minutesLeft = int(error.retry_after / 60)
-        msg = f"**Still on cooldown**, please try again in {minutesLeft}min"
+        msg = f"**Vänligen vänta**, försök igen om {minutesLeft} minuter!"
         await ctx.send(msg)
         
 @bot.command()
@@ -148,7 +148,7 @@ async def callstaff(ctx):
     channel = bot.get_channel(1004381595836358676)
     await channel.send(content=None, embed=report_function(ctx.message))
     await channel.send(moderatorRole)
-    print(content=None, embed=report_function(ctx))
+    await ctx.send("Din staff-förfrågan har skickats!")
     
 @bot.command()
 async def hjälp(ctx):
