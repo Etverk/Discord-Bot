@@ -10,6 +10,7 @@ import serverdata
 
 #Config
 moderatorRole = "<@&1004383226862772274>"
+commandsChannel = 1004381595836358676
 
 #Bot intiation
 bot = commands.Bot(command_prefix="&", intents = discord.Intents.default())
@@ -145,7 +146,7 @@ async def hjälpare(ctx):
 @bot.command()
 @commands.cooldown(1,1800,commands.BucketType.user)
 async def callstaff(ctx):
-    channel = bot.get_channel(1004381595836358676)
+    channel = bot.get_channel(commandsChannel)
     await channel.send(content=None, embed=report_function(ctx.message))
     await channel.send(moderatorRole)
     await ctx.send("Din staff-förfrågan har skickats!")
