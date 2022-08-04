@@ -7,10 +7,17 @@ import requests
 import json
 import re
 import serverdata
+import random
 
 #Config
-moderatorRole = "<@&1004383226862772274>"
-commandsChannel = 1004381595836358676
+moderatorRole = "<@&702885164912607354 TEST>"
+commandsChannel = 927992894567120966
+
+#Imports discord token from "token.0"
+with open("token.0", "r", encoding="utf-8") as f:
+    lines = f.readlines()
+    botToken = lines[0]
+    creatorUser = int(lines[1])
 
 #Bot intiation
 bot = commands.Bot(command_prefix="&", intents = discord.Intents.default())
@@ -154,11 +161,17 @@ async def callstaff(ctx):
 @bot.command()
 async def hjälp(ctx):
     await ctx.send(content=None, embed=get_help())
+    
+@bot.command()
+async def party(ctx):
+    print(creatorUser)
+    if ctx.author.id == creatorUser:
+        partyIcons = [":partying_face:", ":tada:", ":champagne_glass:"]
+        print("hmm2")
+        for i in range(5):
+            await ctx.send(random.choice(partyIcons) + random.choice(partyIcons) + random.choice(partyIcons) + random.choice(partyIcons) + random.choice(partyIcons))
 
-#Imports discord token from "token.0"
-with open("token.0", "r", encoding="utf-8") as f:
-    lines = f.readlines()
-    botToken = lines[0]
+
 
 #Runs bot 
 #bot.run(botToken)
