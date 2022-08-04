@@ -8,6 +8,9 @@ import json
 import re
 import serverdata
 
+#Config
+moderatorRole = "<@&1004383226862772274>"
+
 #Bot intiation
 bot = commands.Bot(command_prefix="&", intents = discord.Intents.default())
 
@@ -144,7 +147,7 @@ async def hjälpare(ctx):
 async def callstaff(ctx):
     channel = bot.get_channel(1004381595836358676)
     await channel.send(content=None, embed=report_function(ctx.message))
-    await channel.send("<@&1004383226862772274>")
+    await channel.send(moderatorRole)
     print(content=None, embed=report_function(ctx))
     
 @bot.command()
