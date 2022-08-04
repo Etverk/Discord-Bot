@@ -8,8 +8,8 @@ import json
 import re
 import serverdata
 
-#bot
-bot = commands.Bot(command_prefix=">", intents = discord.Intents.default())
+#Bot intiation
+bot = commands.Bot(command_prefix="&", intents = discord.Intents.default())
 
 #Main inspiration function
 def get_inspiration():
@@ -19,7 +19,7 @@ def get_inspiration():
         return "För många förfrågningar. Vänligen vänta."
     else:
         return jsonData[0]["q"] + "  - **" + jsonData[0]["a"] + "**"
-
+    
 #Returns embed containing the server's helpers.
 def get_hjälpare_embed():
     embed = discord.Embed(
@@ -119,33 +119,41 @@ def get_help():
     )
     return embed
 
-#Bot events
 #Login confirmation message
 @bot.event
 async def on_ready():
     print(f"We have logged in as {bot.user}")
 
-#Checks all sent messages
 @bot.event
-async def on_message(message):
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        msg = "**Still on cooldown**, please try again in {:.2f}s".format(error.retry_after)
+        await ctx.send(msg)
+        
+@bot.command()
+@commands.cooldown(1,10,commands.BucketType.user)
+async def beg(ctx):
+    await ctx.send("Someone gave you 10 coins!")
+
+@bot.command()
+async def inspiration(ctx):
+    await ctx.send(get_inspiration())
+
+@bot.command()
+async def hjälpare(ctx):
+    await ctx.send(content=None, embed=get_hjälpare_embed())
+
+@bot.command()
+async def callstaff(ctx):
+    channel = bot.get_channel(1004381595836358676)
+    await channel.send(content=None, embed=report_function(ctx.message))
+    await channel.send("<@&1004383226862772274>")
+    print(content=None, embed=report_function(ctx))
     
-    #Looks for "&inspiration" command and runs corresponding function
-    if message.content.startswith("&inspiration"):
-        inspiration = get_inspiration()
-        await message.channel.send(inspiration)
-        
-    if message.content.startswith("&hjälpare"):
-        await message.channel.send(content=None, embed=get_hjälpare_embed())
-        
-    #&callstaff {reason}
-    if message.content.startswith("&callstaff"):
-        channel = bot.get_channel(1004381595836358676)
-        await channel.send(content=None, embed=report_function(message))
-        await channel.send("<@&1004383226862772274>")
- 
-    #Looks for "&hjälp" command and runs corresponding function
-    if message.content == ("&hjälp"):
-        await message.channel.send(content=None, embed=get_help())
+@bot.command()
+async def hjälp(ctx):
+    await ctx.send(content=None, embed=get_help())
+
     
 #Imports discord token from "token.0"
 with open("token.0", "r", encoding="utf-8") as f:
