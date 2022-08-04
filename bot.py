@@ -127,14 +127,10 @@ async def on_ready():
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
-        msg = "**Still on cooldown**, please try again in {:.2f}s".format(error.retry_after)
+        minutesLeft = int(error.retry_after / 60)
+        msg = f"**Still on cooldown**, please try again in {minutesLeft}min"
         await ctx.send(msg)
         
-@bot.command()
-@commands.cooldown(1,10,commands.BucketType.user)
-async def beg(ctx):
-    await ctx.send("Someone gave you 10 coins!")
-
 @bot.command()
 async def inspiration(ctx):
     await ctx.send(get_inspiration())
@@ -144,6 +140,7 @@ async def hjälpare(ctx):
     await ctx.send(content=None, embed=get_hjälpare_embed())
 
 @bot.command()
+@commands.cooldown(1,1800,commands.BucketType.user)
 async def callstaff(ctx):
     channel = bot.get_channel(1004381595836358676)
     await channel.send(content=None, embed=report_function(ctx.message))
