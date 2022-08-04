@@ -8,17 +8,17 @@ import json
 import re
 import serverdata
 
-#Message intents
-intents = discord.Intents.default()
-intents.members = True
-#Client
-client = discord.Client(intents=intents)
+#bot
+bot = commands.Bot(command_prefix=">", intents = discord.Intents.default())
 
 #Main inspiration function
 def get_inspiration():
     apiResponse = requests.get("https://zenquotes.io/api/quotes/")
     jsonData = json.loads(apiResponse.text)
-    return jsonData[0]["q"] + "  - **" + jsonData[0]["a"] + "**"
+    if jsonData[0]["q"].startswith("Too many requests."):
+        return "För många förfrågningar. Vänligen vänta."
+    else:
+        return jsonData[0]["q"] + "  - **" + jsonData[0]["a"] + "**"
 
 #Returns embed containing the server's helpers.
 def get_hjälpare_embed():
@@ -119,14 +119,14 @@ def get_help():
     )
     return embed
 
-#Client events
+#Bot events
 #Login confirmation message
-@client.event
+@bot.event
 async def on_ready():
-    print(f"We have logged in as {client.user}")
+    print(f"We have logged in as {bot.user}")
 
 #Checks all sent messages
-@client.event
+@bot.event
 async def on_message(message):
     
     #Looks for "&inspiration" command and runs corresponding function
@@ -139,7 +139,7 @@ async def on_message(message):
         
     #&callstaff {reason}
     if message.content.startswith("&callstaff"):
-        channel = client.get_channel(1004381595836358676)
+        channel = bot.get_channel(1004381595836358676)
         await channel.send(content=None, embed=report_function(message))
         await channel.send("<@&1004383226862772274>")
  
@@ -154,4 +154,5 @@ with open("token.0", "r", encoding="utf-8") as f:
     botToken = lines[0]
 
 #Runs bot 
-client.run(botToken)
+#bot.run(botToken)
+bot.run(botToken)
