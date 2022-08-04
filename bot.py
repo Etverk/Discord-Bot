@@ -146,7 +146,6 @@ async def on_message(message):
     #Looks for "&hjälp" command and runs corresponding function
     if message.content == ("&hjälp"):
         await message.channel.send(content=None, embed=get_help())
-        print(serverdata.Mp["name"])
     
 #Imports discord token from "token.0"
 with open("token.0", "r", encoding="utf-8") as f:
