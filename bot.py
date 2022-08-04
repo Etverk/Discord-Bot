@@ -154,7 +154,6 @@ async def callstaff(ctx):
 async def hjälp(ctx):
     await ctx.send(content=None, embed=get_help())
 
-    
 #Imports discord token from "token.0"
 with open("token.0", "r", encoding="utf-8") as f:
     lines = f.readlines()
